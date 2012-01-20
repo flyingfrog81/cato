@@ -1,0 +1,5 @@
+include COPYING.txt
+include LICENSE
+include README
+include readme.txt
+recursive-include doc/ *.html *.css *.txt *.gif *.png *.js
