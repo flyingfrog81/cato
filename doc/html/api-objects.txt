@@ -1,0 +1,8 @@
+cato	cato-module.html
+cato.command_line_util	cato-module.html#command_line_util
+cato.__package__	cato-module.html#__package__
+cato.Cato	cato.Cato-class.html
+cato.Cato.parse_license	cato.Cato-class.html#parse_license
+cato.Cato.patch_dir	cato.Cato-class.html#patch_dir
+cato.Cato.patch_file	cato.Cato-class.html#patch_file
+cato.Cato.__init__	cato.Cato-class.html#__init__
