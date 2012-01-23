@@ -32,6 +32,7 @@ setup(name = "cato",
             ],
         long_description = """
 CATO
+====
 
 This module implements the necessary routines used to embed license
 informations into source code project files.
@@ -40,21 +41,30 @@ license files in textual format in a hidden directory inside the user home.
 
 
 LICENSE
+=======
+
 Cato license terms can be found in the LICENSE file distributed with the 
 package.
 
 INSTALLATION
+============
 
-after downloading the package
-$ cd cato
-$ python setup.py install
+after downloading the package::
+
+    $ cd cato
+    $ python setup.py install
+
+or via pypi automatic installation::
+
+    $ pip install cato
 
 DOCUMENTAION
+============
 
 Developer documentation is distributed in html format along with the package,
-and can be obtained running epydoc on the source code files.
+and can be obtained running epydoc on the source code files::
 
-Usage: cato -l gpl-3.0 -o "John Doe" -e john@doe.com -y 2012 filename.py
+    Usage: cato -l gpl-3.0 -o "John Doe" -e john@doe.com -y 2012 filename.py
 
 Cato is free software for applying licenses to your source code files. You
 can customize cato changing the cato.cfg file that you find in ~/.cato/ and
@@ -68,7 +78,7 @@ directory for file extensions specified as command line arguments. If -r is
 provided in conjunction with -d, all the directory tree is scanned starting
 from the supplied dir.
 
-Options:
+Options::
   -h, --help            show this help message and exit
   --list                Lists available licenses and quit
   -l LICENSE, --license=LICENSE

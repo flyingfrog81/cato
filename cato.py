@@ -228,14 +228,16 @@ directory tree is scanned starting from the supplied dir.
                         print "Applying license to file: " + f
                         cato_licenser.patch_file(os.path.join(root, f), embedded_lic)
         else:
-            for f in os.listdir(dir):
-                match = False
-                for a in args:
-                    if fnmatch.fnmatch(f, "*." + a):
-                        match = True
-                if match:
-                    print "Applying license to file: " + f
-                    cato_licenser.patch_file(os.path.join(root, f), embedded_lic)
+            root = os.path.abspath(dir)
+            for f in os.listdir(root):
+                if os.path.isfile(os.path.join(root, f)):
+                    match = False
+                    for a in args:
+                        if fnmatch.fnmatch(f, "*." + a):
+                            match = True
+                    if match:
+                        print "Applying license to file: " + f
+                        cato_licenser.patch_file(os.path.join(root, f), embedded_lic)
     else:
         for f in args:
             print "Applying license to file: " + f
