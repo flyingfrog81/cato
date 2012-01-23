@@ -7,7 +7,7 @@ lic_dir = os.path.join(data_dir, "licenses")
 dir_util.mkpath(data_dir, verbose=True)
 
 setup(name = "cato",
-        version = "1.0",
+        version = "1.0.1",
         author = "Marco Bartolini",
         author_email = "marco.bartolini@gmail.com",
         description = "Cato is a command line tool which facilitates source code licensing",
