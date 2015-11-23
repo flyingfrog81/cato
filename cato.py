@@ -33,6 +33,20 @@ import getpass
 import datetime
 import re
 
+COMMENT_SYNTAX = dict(
+                      c = "//",
+                      cpp = "//",
+                      cc = "//",
+                      h = "//",
+                      hpp = "//",
+                      py = "#",
+                      java = "//",
+                      f = "!",
+                      rb = "#",
+                      sh = "#",
+                      default = "*",
+                     )
+
 class Cato(object):
     def __init__(self):
         """
@@ -43,25 +57,15 @@ class Cato(object):
         self.license_dir = os.path.join(self.cato_dir, "licenses")
         self.end_phrase = "END OF TERMS AND CONDITIONS"
 
-        self.comment_syntax = {"c" : "//",
-                "cpp" : "//", 
-                "cc" : "//", 
-                "h" : "//",
-                "hpp" : "//",
-                "py" : "#",
-                "java" : "//",
-                "f" : "!",
-                "rb" : "#",
-                "default" : "*",
-                }
-
-        self.license_tags = {"<year>" : str(datetime.datetime.now().year),
+        self.license_tags = {
+                "<year>" : str(datetime.datetime.now().year),
                 "<owner>" : getpass.getuser(),
                 "<email>" : getpass.getuser() + "@example.com",
                 }
 
         self.eol = "\n"
         self.loaded = False
+        self.comment_syntax = COMMENT_SYNTAX
 
     def parse_license(self, lic_name):
         """
@@ -106,17 +110,23 @@ class Cato(object):
         """
         extension = filename.split(".")[-1]
         comment = self.comment_syntax.get(extension, self.comment_syntax["default"])
-        embedded = False
+        def _is_comment_line(line):
+            return line.startswith(comment)
         with open(filename, "rt") as input:
             with open(filename + ".cato", "wt") as output:
+                #copy beginning comments with no change
+                input_line = input.readline()
+                while _is_comment_line(input_line):
+                    output.write(input_line)
+                    input_line = input.readline()
+                output.write(self.eol)
+                for embed_line in embedded_license:
+                    output.write(comment + embed_line + self.eol)
+                output.write(self.eol)
+                output.write(input_line)
                 for input_line in input:
                     output.write(input_line)
-                    if not embedded and input_line.strip() == "":
-                        for embed_line in embedded_license:
-                            output.write(comment + embed_line + self.eol)
-                        embedded = True
         os.rename(filename + ".cato", filename)
-        return embedded
 
     def patch_dir(self, dirname, extended_license):
         """
