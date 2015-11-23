@@ -32,6 +32,8 @@ import os
 import getpass
 import datetime
 import re
+import logging
+logger = logging.getLogger(__name__)
 
 COMMENT_SYNTAX = dict(
                       c = "//",
@@ -149,6 +151,7 @@ def command_line_util(args):
     import fnmatch
 
     cato_licenser = Cato()
+    logging.basicConfig(level=logging.DEBUG)
 
     # Parsing configuration file options
     scp = SafeConfigParser()
@@ -225,20 +228,24 @@ directory tree is scanned starting from the supplied dir.
 
     # Apply the license to given sources
     if options.directory:
-        dir = options.directory
-        cato_licenser.patch_dir(dir, extended_lic)
+        dirname = options.directory
+        try:
+            cato_licenser.patch_dir(dirname, extended_lic)
+        except IOError:
+            logger.error("Cannot insert license in directory: %s" % (dirname,))
         if options.recursive:
-            for root, dirs, files in os.walk(dir):
+            for root, dirs, files in os.walk(dirname):
                 for f in files:
                     match = False
                     for a in args:
+                        logger.debug("arg: %s" % (a,))
                         if fnmatch.fnmatch(f, "*." + a):
                             match = True
                     if match:
-                        print "Applying license to file: " + f
+                        logger.info("Applying license to file: " + f)
                         cato_licenser.patch_file(os.path.join(root, f), embedded_lic)
         else:
-            root = os.path.abspath(dir)
+            root = os.path.abspath(dirname)
             for f in os.listdir(root):
                 if os.path.isfile(os.path.join(root, f)):
                     match = False
@@ -251,4 +258,7 @@ directory tree is scanned starting from the supplied dir.
     else:
         for f in args:
             print "Applying license to file: " + f
-            cato_licenser.patch_file(f, embedded_lic)
+            try:
+                cato_licenser.patch_file(f, embedded_lic)
+            except IOError, ioe:
+                logger.error("cannot find file: %s" % (f,))
